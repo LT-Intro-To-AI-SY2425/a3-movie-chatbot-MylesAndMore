@@ -171,6 +171,19 @@ def title_by_actor(matches: List[str]) -> List[str]:
     return [get_title(movie) for movie in movie_db if actor in get_actors(movie)]
 
 
+def years_by_actor(matches: List[str]) -> List[int]:
+    """Finds all years that the given actor appeared in a movie
+
+    Args:
+        matches - a list of 1 string, just the actor
+
+    Returns:
+        a list of years that the actor appeared in a movie
+    """
+    actor = matches[0]
+    return list(set([get_year(movie) for movie in movie_db if actor in get_actors(movie)]))
+
+
 # dummy argument is ignored and doesn't matter
 def bye_action(dummy: List[str]) -> None:
     raise KeyboardInterrupt
@@ -191,6 +204,7 @@ pa_list: List[Tuple[List[str], Callable[[List[str]], List[Any]]]] = [
     (str.split("who acted in %"), actors_by_title),
     (str.split("when was % made"), year_by_title),
     (str.split("in what movies did % appear"), title_by_actor),
+    (str.split("in what years did % appear"), years_by_actor),
     (["bye"], bye_action),
 ]
 
@@ -209,7 +223,7 @@ def search_pa_list(src: List[str]) -> List[str]:
     """
     for pattern, action in pa_list:
         matches = match(pattern, src)
-        if matches:
+        if matches is not None:
             answers = action(matches)
             return answers if answers else ["No answers"]
     return ["I don't understand"]
@@ -257,7 +271,7 @@ if __name__ == "__main__":
 
     assert isinstance(title_after_year(["1990"]), list), "title_after_year not returning a list"
     assert sorted(title_after_year(["1990"])) == sorted(
-        ["boyz n the hood", "dead again", "the crying game", "flirting", "malcolm x"]
+        ["boyz n the hood", "dead again", "the crying game", "flirting", "malcolm x", "the emoji movie"]
     ), "failed title_after_year test"
 
     assert isinstance(director_by_title(["jaws"]), list), "director_by_title not returning a list"
@@ -291,6 +305,11 @@ if __name__ == "__main__":
     assert sorted(title_by_actor(["orson welles"])) == sorted(
         ["citizen kane", "othello"]
     ), "failed title_by_actor test"
+
+    assert isinstance(years_by_actor(["edward fox"]), list), "years_by_actor not returning a list"
+    assert sorted(years_by_actor(["edward fox"])) == sorted(
+        [1973, 1984]
+    ), "failed years_by_actor test"
 
     assert sorted(search_pa_list(["hi", "there"])) == sorted(
         ["I don't understand"]
