@@ -435,4 +435,18 @@ movie_db: List[Tuple[str, str, int, List[str]]] = [
             "spike lee",
         ],
     ),
+    (
+        "the emoji movie",
+        "tony leondis",
+        2017,
+        [
+            "t.j. miller",
+            "james corden",
+            "anna faris",
+            "maya rudolph",
+            "steven wright",
+            "jennifer coolidge",
+            "patrick stewart",
+        ],
+    ),
 ]
